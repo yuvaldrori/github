@@ -4,6 +4,7 @@ require 'nokogiri'
 require 'open-uri'
 
 i = 0
+p = 1
 
 while true
   i += 1
@@ -15,9 +16,18 @@ while true
     break
   end
   posts.each do |post| 
-    if post.text.downcase.include? "supportocat" then
-      puts post.css("h2.blog-post-title").css('a').text
+    if post.text.downcase.include? "support" then
+      line = post.css("h2.blog-post-title").css('a').text
+      begin
+        twitter = post.css('a').select{|link| link.text == "Twitter"}.first['href'].split('/').last
+        line += ' @' + twitter
+      rescue
+      end
+      puts line
+      p += 1
     end
   end
 end
+
+puts 'I found ' + p.to_s + ' support people at GitHub'
 
